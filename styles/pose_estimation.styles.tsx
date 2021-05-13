@@ -6,8 +6,8 @@ export const PageWrapper = Styled.div`
     grid-template-columns: 100%;
     justify-items: center;
     background-color: #ffffff;
-    width:100%;
-    height:auto;
+    width:100vh;
+    height:100%;
 
     .row .column:first-child {
   padding-left: 0;
