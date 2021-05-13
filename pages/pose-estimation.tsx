@@ -3,7 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import * as tf from '@tensorflow/tfjs'
 import * as posenet from '@tensorflow-models/posenet'
 import '@tensorflow/tfjs-backend-webgl'
-//import { Camera } from "react-cam"
+// updated webcam component
+import Webcam from 'react-webcam'
 import * as S from '../styles/pose_estimation.styles'
 import WelcomePages from '../layouts/WelcomePages'
 import { observer } from 'mobx-react'
@@ -12,7 +13,8 @@ import { drawKeypoints } from '../utils/tensorflow-utils'
 import { Button } from '@material-ui/core'
 import { Canvas } from '../components/Canvas/Canvas.component'
 import { OrientationAxis } from '../components/OrientationAxis/OrientationAxis.component'
-
+// use dimensions components
+import useDimensions from '../hooks/use-dimensions'
 
 export class DeviceOrientationInfo {
   absolute: boolean = false
@@ -25,8 +27,6 @@ const PoseEstimation = observer(() => {
   // refs for both the webcam and canvas components
   const camRef = useRef(null)
   const canvasRef = useRef(null)
-  //camera hooks
-
 
   // Ios permission  hooks
   const [permissionGranted, setPermissionGranted] = useState<boolean>(false)
@@ -91,14 +91,13 @@ const PoseEstimation = observer(() => {
     if (
       typeof camRef.current !== 'undefined' &&
       camRef.current !== null &&
-      typeof camRef.current.camRef.current !== 'undefined' &&
-      camRef.current.camRef.current.readyState === 4
+      camRef.current.video.readyState === 4
     ) {
       // Get Video Properties
-      const video = camRef.current.camRef.current
-      const videoWidth = 400
-      const videoHeight = 400
-
+      const video = camRef.current.video
+      const videoWidth = 800
+      const videoHeight = 800
+      console.log(videoWidth)
       // Make detections
       const pose = await net.estimateSinglePose(video)
       console.log(pose)
@@ -107,12 +106,14 @@ const PoseEstimation = observer(() => {
   }
 
   const drawCanvas = (pose, video, videoWidth, videoHeight, canvas) => {
-    const ctx = canvas.current.getContext('2d')
-    canvas.current.width = videoWidth
-    canvas.current.height = videoHeight
+    if (canvas.current !== null) {
+      const ctx = canvas.current.getContext('2d')
+      canvas.current.width = videoWidth
+      canvas.current.height = videoHeight
 
-    var kp = pose['keypoints']
-    drawKeypoints(kp, 0.35, ctx)
+      var kp = pose['keypoints']
+      drawKeypoints(kp, 0.35, ctx)
+    }
   }
 
   function capture(imgSrc) {
@@ -122,19 +123,13 @@ const PoseEstimation = observer(() => {
   return (
     <WelcomePages>
       <S.PageWrapper>
-
-        {typeof window !== 'undefined' &&
-        typeof window.navigator !== 'undefined' ? ( <div></div>
-        ) :  // <Camera
-        //   showFocus={true}
-        //   front={false}
-        //   capture={capture}
-        //   ref={camRef}
-        //   width="400"
-        //   height="400"
-        // />
-        
-        null}
+        <Webcam
+          audio={false}
+          height={800}
+          width={800}
+          ref={camRef}
+          screenshotFormat="image/jpeg"
+        />
         {typeof window !== 'undefined' &&
         typeof window.navigator !== 'undefined' ? (
           <canvas
@@ -147,41 +142,26 @@ const PoseEstimation = observer(() => {
               right: 0,
               textAlign: 'center',
               zIndex: 9,
-              width: 400,
-              height: 400,
+              width: 800,
+              height: 800,
             }}
           />
         ) : null}
+        {permissionGranted === true ? (
+          <Canvas width={800} height={800} dpr={1} isAnimating={true}>
+            <OrientationAxis
+              beta={deviceOrientation?.beta}
+              gamma={deviceOrientation?.gamma}
+            ></OrientationAxis>
+          </Canvas>
+        ) : (
+          <Button onClick={grantPermissionForDeviceOrientation}>
+            Authorize Orientation
+          </Button>
+        )}
       </S.PageWrapper>
-      {permissionGranted === true ? (
-        <Canvas
-          // style={{
-          //   position: "absolute",
-          //   marginLeft: "auto",
-          //   marginRight: "auto",
-          //   left: 0,
-          //   right: 0,
-          //   textAlign: "center",
-          //   zIndex: 9,
-          // }}
-          width={400}
-          height={400}
-          dpr={1}
-          isAnimating={true}
-        >
-          <OrientationAxis
-            beta={deviceOrientation?.beta}
-            gamma={deviceOrientation?.gamma}
-          ></OrientationAxis>
-        </Canvas>
-      ) : (
-        <Button onClick={grantPermissionForDeviceOrientation}>
-          Authorize Orientation
-        </Button>
-      )}
     </WelcomePages>
   )
 })
 
 export default PoseEstimation
-
