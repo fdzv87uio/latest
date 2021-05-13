@@ -95,8 +95,8 @@ const PoseEstimation = observer(() => {
     ) {
       // Get Video Properties
       const video = camRef.current.video
-      const videoWidth = 900
-      const videoHeight = 900
+      const videoWidth = 600
+      const videoHeight = 600
       console.log(videoWidth)
       // Make detections
       const pose = await net.estimateSinglePose(video)
@@ -125,8 +125,8 @@ const PoseEstimation = observer(() => {
       <S.PageWrapper>
         <Webcam
           audio={false}
-          height={900}
-          width={900}
+          height={600}
+          width={600}
           ref={camRef}
           screenshotFormat="image/jpeg"
         />
@@ -142,13 +142,13 @@ const PoseEstimation = observer(() => {
               right: 0,
               textAlign: 'center',
               zIndex: 9,
-              width: 900,
-              height: 900,
+              width: 600,
+              height: 600,
             }}
           />
         ) : null}
         {permissionGranted === true ? (
-          <Canvas width={900} height={900} dpr={1} isAnimating={true}>
+          <Canvas width={600} height={600} dpr={1} isAnimating={true}>
             <OrientationAxis
               beta={deviceOrientation?.beta}
               gamma={deviceOrientation?.gamma}

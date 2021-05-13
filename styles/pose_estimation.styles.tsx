@@ -2,7 +2,9 @@ import Styled from 'styled-components'
 
 export const PageWrapper = Styled.div`
 
-    display: block;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
     background-color: #ffffff;
     width:100vh;
     height:auto;
