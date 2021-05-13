@@ -10,12 +10,12 @@ export const PageWrapper = Styled.div`
     height:auto;
 
     .row .column:first-child {
-  padding-left: 0;
-}
+        padding-left: 0;
+    }
 
-.row .column:last-child {
-  padding-right: 0;
-}
+    .row .column:last-child {
+        padding-right: 0;
+    }
 
 
 
