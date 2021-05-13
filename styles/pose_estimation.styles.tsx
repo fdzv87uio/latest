@@ -3,17 +3,14 @@ import Styled from 'styled-components'
 export const PageWrapper = Styled.div`
 
     display: grid;
-    grid-template-columns: 100%;
+    grid-template-columns: 1fr;
+    justify-items: center;
     background-color: #ffffff;
     width:100vh;
-    height:100%;
+    height:auto;
+    position: relative;
+    left: 30px;
 
-
-    video{
-        width:100vh;
-        height:100%;
-        
-    }
 
 
 
