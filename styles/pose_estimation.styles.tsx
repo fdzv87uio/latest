@@ -11,11 +11,9 @@ export const PageWrapper = Styled.div`
 
     .row .column:first-child {
   padding-left: 0;
-}
-
-.row .column:last-child {
   padding-right: 0;
 }
+
 
 video {
     width:100vh;
