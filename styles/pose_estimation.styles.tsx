@@ -3,10 +3,11 @@ import Styled from 'styled-components'
 export const PageWrapper = Styled.div`
 
     display: grid;
-    grid-template-columns: 120%;
+    grid-template-columns: 100%;
+    justify-items: center;
     background-color: #ffffff;
-    width:100vh;
-    height:100%;
+    width:100%;
+    height:auto;
 
     .row .column:first-child {
   padding-left: 0;
@@ -16,7 +17,8 @@ export const PageWrapper = Styled.div`
   padding-right: 0;
 }
 
-
-
+video {
+    width:100vh;
+}
     
 `

@@ -60,7 +60,6 @@ export const Canvas = ({ height, width, dpr, isAnimating, children }: CanvasProp
             marginRight: "auto",
             left: 0,
             right: 0,
-            textAlign: "center",
             zIndex: 9,
             width,
             height,
