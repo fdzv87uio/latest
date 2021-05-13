@@ -2,7 +2,8 @@ import Styled from 'styled-components'
 
 export const PageWrapper = Styled.div`
 
-    display: block;
+    display: grid;
+    grid-template-columns: 100%;
     background-color: #ffffff;
     width:100vh;
     height:100%;
@@ -10,6 +11,8 @@ export const PageWrapper = Styled.div`
 
     video{
         width:100vh;
+        height:100%;
+        
     }
 
 
