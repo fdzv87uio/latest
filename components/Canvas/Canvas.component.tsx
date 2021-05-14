@@ -55,14 +55,14 @@ export const Canvas = ({ height, width, dpr, isAnimating, children }: CanvasProp
           height={actualHeight}
           width={actualWidth}
           style={{
-            position: "absolute",
-            marginLeft: "auto",
-            marginRight: "auto",
-            left: 0,
-            right: 0,
+            position: 'absolute',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            top:60,
+            textAlign: 'center',
             zIndex: 9,
-            width,
-            height,
+            width: 800,
+            height: 800,
           }}
         />
         {children}

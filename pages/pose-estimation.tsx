@@ -13,8 +13,12 @@ import { drawKeypoints } from '../utils/tensorflow-utils'
 import { Button } from '@material-ui/core'
 import { Canvas } from '../components/Canvas/Canvas.component'
 import { OrientationAxis } from '../components/OrientationAxis/OrientationAxis.component'
-// use dimensions components
-import useDimensions from '../hooks/use-dimensions'
+
+const videoConstraints = {
+  width: 800,
+  height: 800,
+  facingMode: 'user',
+}
 
 export class DeviceOrientationInfo {
   absolute: boolean = false
@@ -24,7 +28,12 @@ export class DeviceOrientationInfo {
 }
 
 const PoseEstimation = observer(() => {
+  useEffect(() => {
+    runPosenet()
+  }, [])
   // refs for both the webcam and canvas components
+  // const camRef = useRef(null)
+  const posenetRef = useRef(null)
   const camRef = useRef(null)
   const canvasRef = useRef(null)
 
@@ -62,18 +71,6 @@ const PoseEstimation = observer(() => {
     })
   }
 
-  useEffect(() => {
-    if (
-      typeof window !== 'undefined' &&
-      typeof window.navigator !== 'undefined'
-    ) {
-      runPosenet()
-    }
-  }, [])
-  // //load rotation coordinates
-
-  // // // load and run posenet function
-
   async function runPosenet() {
     const net = await posenet.load({
       architecture: 'MobileNetV1',
@@ -88,21 +85,22 @@ const PoseEstimation = observer(() => {
   }
 
   const detect = async (net) => {
-    if (
-      typeof camRef.current !== 'undefined' &&
-      camRef.current !== null &&
-      camRef.current.video.readyState === 4
-    ) {
-      // Get Video Properties
-      const video = camRef.current.video
-      const videoWidth = 800
-      const videoHeight = 800
-      console.log(videoWidth)
-      // Make detections
-      const pose = await net.estimateSinglePose(video)
-      console.log(pose)
-      drawCanvas(pose, video, videoWidth, videoHeight, canvasRef)
-    }
+    const video = canvasRef.current
+    const videoWidth = 800
+    const videoHeight = 800
+    console.log(videoWidth)
+    // Make detections
+    const pose = await net.estimateSinglePose(video)
+    console.log(pose)
+    drawCanvas(pose, video, videoWidth, videoHeight, posenetRef)
+    // if (
+    //   typeof camRef.current !== 'undefined' &&
+    //   camRef.current !== null &&
+    //   camRef.current.video.readyState === 4
+    // ) {
+    //   // Get Video Properties
+    //
+    // }
   }
 
   const drawCanvas = (pose, video, videoWidth, videoHeight, canvas) => {
@@ -120,33 +118,63 @@ const PoseEstimation = observer(() => {
     console.log(imgSrc)
   }
 
+  function drawImge() {
+    const video = camRef.current
+    const canvas = canvasRef.current
+    if (video && canvas) {
+      var ctx = canvas.getContext('2d')
+
+      canvas.width = video.video.videoWidth
+      canvas.height = video.video.videoHeight
+
+      // We want also the canvas to display de image mirrored
+      ctx.translate(canvas.width, 0)
+      ctx.scale(-1, 1)
+      ctx.drawImage(video.video, 0, 0, canvas.width, canvas.height)
+      ctx.scale(-1, 1)
+      ctx.translate(-canvas.width, 0)
+      setTimeout(drawImge, 33)
+    }
+  }
+  setTimeout(drawImge, 33)
+
+  console.log(canvasRef.current)
   return (
     <WelcomePages>
       <S.PageWrapper>
         <Webcam
           audio={false}
-          height={800}
-          width={800}
           ref={camRef}
-          screenshotFormat="image/jpeg"
+          mirrored
+          style={{ display: 'none', width:800, height:800 }}
         />
-        {typeof window !== 'undefined' &&
-        typeof window.navigator !== 'undefined' ? (
-          <canvas
-            ref={canvasRef}
-            style={{
-              position: 'absolute',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              left: 0,
-              right: 0,
-              textAlign: 'center',
-              zIndex: 9,
-              width: 800,
-              height: 800,
-            }}
-          />
-        ) : null}
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: 'absolute',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            top:60,
+            textAlign: 'center',
+            zIndex: 9,
+            width: 800,
+            height: 800,
+          }}
+        />
+        <canvas
+          ref={posenetRef}
+          style={{
+            position: 'absolute',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            top:120,
+            left:70,
+            textAlign: 'center',
+            zIndex: 9,
+            width: 800,
+            height: 800,
+          }}
+        />
         {permissionGranted === true ? (
           <Canvas width={800} height={800} dpr={1} isAnimating={true}>
             <OrientationAxis
@@ -154,11 +182,12 @@ const PoseEstimation = observer(() => {
               gamma={deviceOrientation?.gamma}
             ></OrientationAxis>
           </Canvas>
-        ) : (
+        ) : null}
+        {permissionGranted === false ? (
           <Button onClick={grantPermissionForDeviceOrientation}>
             Authorize Orientation
           </Button>
-        )}
+        ) : null}
       </S.PageWrapper>
     </WelcomePages>
   )

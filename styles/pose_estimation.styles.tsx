@@ -5,13 +5,7 @@ export const PageWrapper = Styled.div`
     display: block;
     background-color: #ffffff;
     width:100vh;
-    height:900px;
-    position: relative;
-
-    video {
-        width:100vh;
-        height:100%;
-    }
+    height:100%;
 
 
 
