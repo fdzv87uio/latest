@@ -7,5 +7,6 @@ export const PageWrapper = Styled.div`
     width:100vh;
     height:1340px;
 
+
     
 `

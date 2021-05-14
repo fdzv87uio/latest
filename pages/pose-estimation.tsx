@@ -15,8 +15,8 @@ import { Canvas } from '../components/Canvas/Canvas.component'
 import { OrientationAxis } from '../components/OrientationAxis/OrientationAxis.component'
 
 const videoConstraints = {
-  width: 800,
-  height: 800,
+  width: 1340,
+  height: 1340,
   facingMode: 'user',
 }
 
@@ -86,8 +86,8 @@ const PoseEstimation = observer(() => {
 
   const detect = async (net) => {
     const video = canvasRef.current
-    const videoWidth = 800
-    const videoHeight = 800
+    const videoWidth = 1340
+    const videoHeight = 1340
     console.log(videoWidth)
     // Make detections
     const pose = await net.estimateSinglePose(video)
@@ -146,7 +146,7 @@ const PoseEstimation = observer(() => {
           audio={false}
           ref={camRef}
           mirrored
-          style={{ display: 'none', width:800, height:800 }}
+          style={{ display: 'none', width:1340, height:1340 }}
         />
         <canvas
           ref={canvasRef}
@@ -157,8 +157,8 @@ const PoseEstimation = observer(() => {
             top:60,
             textAlign: 'center',
             zIndex: 9,
-            width: 800,
-            height: 800,
+            width: 1340,
+            height: 1340,
           }}
         />
         <canvas
@@ -170,12 +170,12 @@ const PoseEstimation = observer(() => {
             top:60,
             textAlign: 'center',
             zIndex: 9,
-            width: 800,
-            height: 800,
+            width: 1340,
+            height: 1340,
           }}
         />
         {permissionGranted === true ? (
-          <Canvas width={800} height={800} dpr={1} isAnimating={true}>
+          <Canvas width={1340} height={1340} dpr={1} isAnimating={true}>
             <OrientationAxis
               beta={deviceOrientation?.beta}
               gamma={deviceOrientation?.gamma}
