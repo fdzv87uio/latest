@@ -3,11 +3,9 @@ import Styled from 'styled-components'
 export const PageWrapper = Styled.div`
 
     display: block;
-    background-color: #ffffff;
+    background-color: #000;
     width:100vh;
-    height:100%;
-
-
+    height:1340px;
 
     
 `
